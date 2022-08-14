@@ -3,7 +3,7 @@
 LorenzAttractor::LorenzAttractor()
 {
 	// Text
-	font.loadFromFile("FUTRFW.ttf");
+	font.loadFromFile("../FUTRFW.ttf");
 	text.setFont(font);
 	text.setString(names[u]);
 	text.setScale(0.1f, 0.1f);
@@ -30,16 +30,17 @@ LorenzAttractor::LorenzAttractor()
 
 	colours =
 	{
-		sf::Color::Color(115, 62, 101, 42), // 42
-		sf::Color::Color(255, 126, 210, 127),
-		sf::Color::Color(109, 193, 202, 179),
-		sf::Color::Color(135, 216, 10, 203),
-		sf::Color::Color(125, 26, 133, 99),
-		sf::Color::Color(8, 161, 163, 57),
-		sf::Color::Color(134, 184, 38, 183),
-		sf::Color::Color(132, 159, 149, 188),
-		sf::Color::Color(100, 195, 167, 160),
-		sf::Color::Color(190, 242, 126, 252),
+		sf::Color(115, 62, 101, 42), // 42
+		sf::Color(255, 126, 210, 127),
+		sf::Color(109, 193, 202, 179),
+		sf::Color(135, 216, 10, 203),
+		sf::Color(125, 26, 133, 99),
+		// sf::Color(255, 255, 255, 255),
+		sf::Color(8, 161, 163, 57),
+		sf::Color(134, 184, 38, 183),
+		sf::Color(132, 159, 149, 188),
+		sf::Color(100, 195, 167, 160),
+		sf::Color(190, 242, 126, 252),
 	};
 
 	trail_colours_params =
@@ -49,7 +50,8 @@ LorenzAttractor::LorenzAttractor()
 		{-47.3382f, -49.5409f, -33.8347f},
 		{-12.9346f, -76.7609f, 70.7356f},
 		{-12.0673f, 51.6949f, 97.4566f},
-		{93.4094f, -16.196f, 40.8949f},
+		// {93.4094f, -16.196f, 40.8949f},
+		{100.0f, 100.0f, 100.0f},
 		{-37.5288f, -31.3912f, -48.0061f},
 		{-5.6245f, -49.0192f, 19.271f},
 		{98.011f, -81.8857f, -80.084f},
@@ -166,6 +168,7 @@ void LorenzAttractor::input(sf::RenderWindow &window)
 
 			for (unsigned i = 0; i < num_points; i++)
 			{
+				
 				circle[i].setFillColor(colours[u]);
 				point[i] = { getRandomNumber(-0.001f, 0.001f), getRandomNumber(-0.001f, 0.001f), getRandomNumber(-0.001f, 0.001f) };
 			}
@@ -186,6 +189,7 @@ void LorenzAttractor::update()
 	timestep = clock.getElapsedTime().asSeconds();
 	input_timer += timestep;
 	clock.restart();
+	
 
 	timestep *= speed; // Slow down or speed up time.
 
@@ -201,6 +205,7 @@ void LorenzAttractor::update()
 			point[i].y += static_cast<float>((point[i].x * (m[1] - point[i].z) - point[i].y) * timestep);
 			point[i].z += static_cast<float>((point[i].x * point[i].y - m[2] * point[i].z) * timestep);
 		}
+		
 		break;
 	}
 	case 1:
@@ -381,7 +386,7 @@ void LorenzAttractor::draw(sf::RenderWindow &window)
 	for (unsigned g = 0; g < num_points; g++)
 	{
 		/// Draw circle
-
+		// std::cout << "drawing point " << g <<std::endl;
 		// Projection maths
 		sf::Vector3f d;
 		d = point[g] - cam_position;
@@ -450,7 +455,7 @@ void LorenzAttractor::draw(sf::RenderWindow &window)
 
 			// Calculate trail colours
 			sf::Color fade;
-			fade = sf::Color::Color(
+			fade = sf::Color(
 				clamp(colours[u].r + trail_colours_params[u][0] * Magnitude(line[1].position - line[0].position)),
 				clamp(colours[u].g + trail_colours_params[u][1] * Magnitude(line[1].position - line[0].position)),
 				clamp(colours[u].b + trail_colours_params[u][2] * Magnitude(line[1].position - line[0].position)),
@@ -491,18 +496,19 @@ void LorenzAttractor::draw(sf::RenderWindow &window)
 
 	// Display then clear the screen
 	window.display();
-	window.clear(sf::Color::Color(0, 0, 0, 255));
+	window.clear(sf::Color(0, 0, 0, 255));
 }
 
 void LorenzAttractor::run(sf::RenderWindow &window)
 {
 	window.setView(view);
-
+	// u = 5;
 	while (window.isOpen() && !endSubProgram)
 	{
 		this->input(window); // Get Input
 		this->update();	     // Update Graphics
 		this->draw(window);  // Draw Graphics
+		// std::cout << "updated" << std::endl;
 	}
 
 	window.setView(sf::View(sf::Vector2f(static_cast<float>(g_screenWidth / 2), static_cast<float>(g_screenHeight / 2)), sf::Vector2f(static_cast<float>(g_screenWidth), static_cast<float>(g_screenHeight))));

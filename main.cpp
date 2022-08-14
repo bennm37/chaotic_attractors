@@ -16,6 +16,6 @@ int main()
   
   
 //   /// Important part is here
-  LorenzAttractor la1;
-  la1.run(window);
+  LorenzAttractor la;
+  la.run(window);
 }
